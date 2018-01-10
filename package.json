@@ -4,6 +4,10 @@
   "main": "index.js",
   "author": "Andrew Mead",
   "license": "MIT",
+  "engineStrict": true,
+  "engines": {
+    "node":"6.12.2"
+  },
   "scripts": {
     "start":"node server/server.js",
     "heroku-postbuild":"npm run build:prod",
