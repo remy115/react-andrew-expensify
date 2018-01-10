@@ -1,4 +1,2 @@
 node_modules/
-public/*.map
-public/styles.css
-public/bundle.js
+public/dist/
