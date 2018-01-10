@@ -20,6 +20,7 @@ const state = store.getState();
 // const visibleExpenses = getVisibleExpenses(state.expenses, state.filters);
 // console.log('state.expenses',state.expenses,'state.filters',state.filters, 'visibleExpenses',visibleExpenses);
 
+console.log('test23');
 const jsx = (
   <Provider store={store}>
     <AppRouter />
