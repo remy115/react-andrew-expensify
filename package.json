@@ -6,11 +6,11 @@
   "license": "MIT",
   "engineStrict": true,
   "engines": {
-    "node":"6.12.2"
+    "node": "6.12.2"
   },
   "scripts": {
-    "start":"node server/server.js",
-    "heroku-postbuild":"npm run build:prod",
+    "start": "node server/server.js",
+    "heroku-postbuild": "npm run build:prod",
     "serve": "live-server public/",
     "build": "webpack",
     "build:prod": "webpack -p --env production",
@@ -31,6 +31,7 @@
     "moment": "^2.20.1",
     "node-sass": "^4.7.2",
     "normalize.css": "^7.0.0",
+    "numeral": "^2.0.6",
     "react": "^16.2.0",
     "react-addons-shallow-compare": "^15.6.2",
     "react-dates": "^16.0.2",
@@ -46,7 +47,7 @@
     "webpack": "^3.10.0",
     "webpack-dev-server": "^2.9.7"
   },
-  "devDependencies":{
+  "devDependencies": {
     "enzyme": "^3.3.0",
     "enzyme-adapter-react-16": "^1.1.1",
     "enzyme-to-json": "^3.3.0",
