@@ -11,6 +11,25 @@ const config = {
 
 firebase.initializeApp(config);
 
-firebase.database().ref().set({
-    name:'remy ponso'
+const database=firebase.database();
+
+database.ref().set({
+    name:'remy ponso',
+    age:36,
+    stressLevel:6,
+    job:{
+        title:'software dev',
+        company:'Google'
+    },
+    isSingle:true,
+    location:{
+        city:'sampa',
+        state:'sp'
+    }
+});
+
+database.ref().update({
+    stressLevel:9,
+    "job/company":'Amazon',
+    "location/city":'Seattle'
 });
