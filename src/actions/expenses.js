@@ -1,4 +1,5 @@
 import uuid from 'uuid';
+import {database} from '../firebase/firebase';
 
 // ADD_EXPENSE
 export const defaultExpense={
@@ -7,23 +8,21 @@ export const defaultExpense={
   amount:0,
   createdAt:Date.now()
 }
-export const addExpense = (
-  {
-    description,
-    note,
-    amount,
-    createdAt
-  } = defaultExpense
-) => ({
+export const addExpense = (expense) => ({
   type: 'ADD_EXPENSE',
-  expense: {
-    id: uuid(),
-    description,
-    note,
-    amount,
-    createdAt
-  }
+  expense
 });
+
+export const startAddExpense=(expense=defaultExpense)=>{
+  return (dispatch)=>{
+    return database.ref('expenses').push(expense)
+      .then((ref)=>{
+        return dispatch(addExpense(
+          Object.assign({id:ref.key},expense)
+        ));
+      });
+  }
+}
 
 // REMOVE_EXPENSE
 export const removeExpense = ({ id } = {}) => ({
