@@ -2,7 +2,8 @@
 
 const expensesReducerDefaultState = [];
 
-export default (state = expensesReducerDefaultState, action) => {
+export default (state = expensesReducerDefaultState, action={type:'@@INIT'}) => {
+  // console.log('@@@@@@@@@@@@@@@',state,action);
   switch (action.type) {
     case 'ADD_EXPENSE':
       return [
@@ -22,6 +23,9 @@ export default (state = expensesReducerDefaultState, action) => {
           return expense;
         };
       });
+    case 'SET_EXPENSES':
+      // console.log('################################',Object.assign({},action.expenses));
+      return Array.from(action.expenses);
     default:
       return state;
   }

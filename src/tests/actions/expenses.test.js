@@ -1,10 +1,21 @@
 import configureMockStore from 'redux-mock-store';
 import thunk from 'redux-thunk';
-import { startAddExpense, addExpense, editExpense, removeExpense, defaultExpense } from '../../actions/expenses';
+import { startAddExpense, addExpense, editExpense, removeExpense, defaultExpense, setExpenses, startSetExpenses } from '../../actions/expenses';
+// import expensesReducer from '../../reducers/expenses';
 import expenses from '../fixtures/expenses';
 import {database} from '../../firebase/firebase';
 
 const createStore=configureMockStore([thunk]);
+
+beforeEach((done)=>{
+  const expenses2Save={};
+  expenses.forEach(elem=>{
+    const {id,description,amount,note,createdAt}=elem;
+    expenses2Save[id]={description,amount,note,createdAt}
+  });
+  database.ref('expenses').set(expenses2Save)
+    .then(()=>done());
+});
 
 test('should setup remove expense action object', () => {
   const action = removeExpense({ id: '123abc' });
@@ -77,6 +88,47 @@ it('should add expense to firebase and store with defaults',(done)=>{
       done();
     });
 
+});
+
+
+it('should set SET_EXPENSES action object',()=>{
+  const action=setExpenses(expenses);
+  expect(action).toEqual({
+    type:'SET_EXPENSES',
+    expenses
+  });
+});
+
+it('should set expenses both on firebase and in redux store',(done)=>{
+  const dummyExpenses=[
+    {
+      description:'dummy expense',
+      amount:11,
+      createdAt:12938495930,
+      note:'should desappear'
+    }
+  ];
+  const store=createStore(dummyExpenses);
+
+
+  store.dispatch(startSetExpenses(expenses))
+    .then(()=>{
+      const expenses2=expenses.map(elem=>{
+        return Object.assign(elem,{id:expect.any(String)});
+      });
+      const expected={
+        type:'SET_EXPENSES',
+        expenses:expenses2
+      }
+      const actions=store.getActions();
+      expect(actions[0]).toEqual(expected);
+
+      return database.ref('expenses').once('value');
+    })
+    .then(snap=>{
+      expect(snap.val()).toEqual(expenses);
+      done();
+    });
 });
 
 // test('should setup add expense action object with default values', () => {

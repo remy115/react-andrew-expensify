@@ -36,3 +36,34 @@ export const editExpense = (id, updates) => ({
   id,
   updates
 });
+
+
+export const setExpenses=(expenses)=>{
+  return {
+    type:'SET_EXPENSES',
+    expenses
+  }
+}
+
+export const startSetExpenses=(expenses)=>{
+  return (dispatch)=>{
+    return database.ref('expenses').set(expenses)
+      .then(()=>{
+        return database.ref('expenses').once('value');
+      })
+      .then(snap=>{
+        const expensesRedux=[];
+        snap.forEach(childSnap=>{
+          const {description,note,amount,createdAt}=childSnap.val();
+          expensesRedux.push({
+            id:childSnap.key,
+            description,
+            note,
+            amount,
+            createdAt
+          });
+        });
+        return dispatch(setExpenses(expensesRedux));
+      });
+    }
+  }
