@@ -99,43 +99,15 @@ it('should set SET_EXPENSES action object',()=>{
   });
 });
 
-it('should set expenses both on firebase and in redux store',(done)=>{
-  const dummyExpenses=[
-    {
-      description:'dummy expense',
-      amount:11,
-      createdAt:12938495930,
-      note:'should desappear'
-    }
-  ];
-  const store=createStore(dummyExpenses);
 
-
-  store.dispatch(startSetExpenses(expenses))
-    .then(()=>{
-      const expenses2=expenses.map(elem=>{
-        return Object.assign(elem,{id:expect.any(String)});
-      });
-      const expected={
-        type:'SET_EXPENSES',
-        expenses:expenses2
-      }
-      const actions=store.getActions();
-      expect(actions[0]).toEqual(expected);
-
-      return database.ref('expenses').once('value');
-    })
-    .then(snap=>{
-      expect(snap.val()).toEqual(expenses);
-      done();
+it('should fetch the expenses from firebase',(done)=>{
+  const store=createStore({});
+  store.dispatch(startSetExpenses()).then(()=>{
+    const actions=store.getActions();
+    expect(actions[0]).toEqual({
+      type:'SET_EXPENSES',
+      expenses
     });
+    done();
+  });
 });
-
-// test('should setup add expense action object with default values', () => {
-//   const action = addExpense();
-//   const verifyObj=Object.assign(defaultExpense,{id:expect.any(String)});
-//   expect(action).toEqual({
-//     type: 'ADD_EXPENSE',
-//     expense: defaultExpense
-//   });
-// });

@@ -45,25 +45,15 @@ export const setExpenses=(expenses)=>{
   }
 }
 
-export const startSetExpenses=(expenses)=>{
+export const startSetExpenses=()=>{
   return (dispatch)=>{
-    return database.ref('expenses').set(expenses)
-      .then(()=>{
-        return database.ref('expenses').once('value');
-      })
+    return database.ref('expenses').once('value')
       .then(snap=>{
-        const expensesRedux=[];
+        const expenses=[];
         snap.forEach(childSnap=>{
-          const {description,note,amount,createdAt}=childSnap.val();
-          expensesRedux.push({
-            id:childSnap.key,
-            description,
-            note,
-            amount,
-            createdAt
-          });
+          expenses.push(Object.assign({id:childSnap.key},childSnap.val()));
         });
-        return dispatch(setExpenses(expensesRedux));
+        return dispatch(setExpenses(expenses));
       });
-    }
   }
+}
