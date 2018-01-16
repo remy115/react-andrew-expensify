@@ -8,8 +8,10 @@ beforeEach(()=>{
     expense=Object.assign({},expenses[1]);
     editExpenseSpy=jest.fn();
     historySpy={push:jest.fn()}
-    removeExpenseSpy=jest.fn();
-    wrapper=shallow(<EditExpensePage expense={expense} editExpense={editExpenseSpy} history={historySpy} removeExpense={removeExpenseSpy} />);
+    removeExpenseSpy=jest.fn(()=>{
+        return {then:(cb)=>{}}
+    });
+    wrapper=shallow(<EditExpensePage expense={expense} editExpense={editExpenseSpy} history={historySpy} startRemoveExpense={removeExpenseSpy} />);
 })
 
 it('should render EditExpensePage',()=>{
