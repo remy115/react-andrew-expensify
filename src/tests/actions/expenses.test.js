@@ -1,11 +1,16 @@
 import configureMockStore from 'redux-mock-store';
 import thunk from 'redux-thunk';
-import { startAddExpense, addExpense, editExpense, removeExpense, startRemoveExpense, defaultExpense, setExpenses, startSetExpenses } from '../../actions/expenses';
+import { startAddExpense, addExpense, editExpense, startEditExpense, removeExpense, startRemoveExpense, defaultExpense, setExpenses, startSetExpenses } from '../../actions/expenses';
 // import expensesReducer from '../../reducers/expenses';
 import expenses from '../fixtures/expenses';
 import {database} from '../../firebase/firebase';
 
 const createStore=configureMockStore([thunk]);
+
+const uid='justtestid998';
+
+const baseRef=`users/${uid}/expenses`;
+const defaultState={auth:{uid}}
 
 beforeEach((done)=>{
   const expenses2Save={};
@@ -13,7 +18,7 @@ beforeEach((done)=>{
     const {id,description,amount,note,createdAt}=elem;
     expenses2Save[id]={description,amount,note,createdAt}
   });
-  database.ref('expenses').set(expenses2Save)
+  database.ref(baseRef).set(expenses2Save)
     .then(()=>done());
 });
 
@@ -46,7 +51,7 @@ test('should setup add expense action object with provided values', () => {
 });
 
 it('should add expense to firebase and redux store',(done)=>{
-  const store=createStore([]);
+  const store=createStore(defaultState);
   const expense={
     description: 'expense from test 1',
     amount:109500,
@@ -62,7 +67,7 @@ it('should add expense to firebase and redux store',(done)=>{
       }
       expect(actions[0]).toEqual(expected);
 
-      return database.ref(`expenses/${actions[0].expense.id}`).once('value')
+      return database.ref(`${baseRef}/${actions[0].expense.id}`).once('value')
     })
     .then(snapshot=>{
       expect(snapshot.val()).toEqual(expense);
@@ -71,7 +76,7 @@ it('should add expense to firebase and redux store',(done)=>{
   });
   
 it('should add expense to firebase and store with defaults',(done)=>{
-  const store=createStore([]);
+  const store=createStore(defaultState);
   store.dispatch(startAddExpense(defaultExpense))
     .then(ret=>{
       const actions=store.getActions();
@@ -81,7 +86,7 @@ it('should add expense to firebase and store with defaults',(done)=>{
       }
       expect(actions[0]).toEqual(expected);
 
-      return database.ref(`expenses/${actions[0].expense.id}`).once('value')
+      return database.ref(`${baseRef}/${actions[0].expense.id}`).once('value')
     })
     .then(snapshot=>{
       expect(snapshot.val()).toEqual(defaultExpense);
@@ -101,7 +106,7 @@ it('should set SET_EXPENSES action object',()=>{
 
 
 it('should fetch the expenses from firebase',(done)=>{
-  const store=createStore({});
+  const store=createStore(defaultState);
   store.dispatch(startSetExpenses()).then(()=>{
     const actions=store.getActions();
     expect(actions[0]).toEqual({
@@ -114,7 +119,7 @@ it('should fetch the expenses from firebase',(done)=>{
 
 
 it('should remove expense from firebase',(done)=>{
-  const store=createStore({});
+  const store=createStore(defaultState);
   const expenseId=expenses[1].id;
   store.dispatch(startRemoveExpense({id:expenseId}))
     .then(()=>{
@@ -123,10 +128,35 @@ it('should remove expense from firebase',(done)=>{
         type:'REMOVE_EXPENSE',
         id:expenseId
       });
-      return database.ref(`expenses/${expenseId}`).once('value');
+      return database.ref(`${baseRef}/${expenseId}`).once('value');
     })
     .then((snap)=>{
       expect(snap.val()).toBeNull();
+      done();
+    });
+});
+
+it('should edit expense in firebase',(done)=>{
+  const store=createStore(defaultState);
+  const id=expenses[1].id;
+  const newExpense={
+    description:'altered expense',
+    amount:99.03,
+    createdAt:Date.now(),
+    note:'created at now()'
+  }
+  store.dispatch(startEditExpense(id,newExpense))
+    .then(()=>{
+      const actions=store.getActions();
+      expect(actions[0]).toEqual({
+        type:'EDIT_EXPENSE',
+        id,
+        updates:newExpense
+      });
+      return database.ref(`${baseRef}/${id}`).once('value')
+    })
+    .then(snap=>{
+      expect(snap.val()).toEqual(newExpense);
       done();
     });
 });

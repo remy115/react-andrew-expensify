@@ -6,12 +6,12 @@ import expenses from '../fixtures/expenses';
 let expense, editExpenseSpy, historySpy, removeExpenseSpy, wrapper;
 beforeEach(()=>{
     expense=Object.assign({},expenses[1]);
-    editExpenseSpy=jest.fn();
+    editExpenseSpy=jest.fn(()=>({then:cp=>cp()}));
     historySpy={push:jest.fn()}
     removeExpenseSpy=jest.fn(()=>{
         return {then:(cb)=>{}}
     });
-    wrapper=shallow(<EditExpensePage expense={expense} editExpense={editExpenseSpy} history={historySpy} startRemoveExpense={removeExpenseSpy} />);
+    wrapper=shallow(<EditExpensePage expense={expense} startEditExpense={editExpenseSpy} history={historySpy} startRemoveExpense={removeExpenseSpy} />);
 })
 
 it('should render EditExpensePage',()=>{

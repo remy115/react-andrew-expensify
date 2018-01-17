@@ -13,12 +13,11 @@ firebase.initializeApp(config);
 
 const database=firebase.database();
 
-const expenses=[
-]
+const googleAuthProvider=new firebase.auth.GoogleAuthProvider();
 
 // expenses.forEach(elem=>{
 //     database.ref('expenses').push(elem);
 // });
 
 
-export {firebase,database};
+export {firebase,database, googleAuthProvider};

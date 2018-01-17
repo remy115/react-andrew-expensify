@@ -14,8 +14,9 @@ export const addExpense = (expense) => ({
 });
 
 export const startAddExpense=(expense=defaultExpense)=>{
-  return (dispatch)=>{
-    return database.ref('expenses').push(expense)
+  return (dispatch,getState)=>{
+    const uid=getState().auth.uid;
+    return database.ref(`users/${uid}/expenses`).push(expense)
       .then((ref)=>{
         return dispatch(addExpense(
           Object.assign({id:ref.key},expense)
@@ -31,8 +32,9 @@ export const removeExpense = ({ id } = {}) => ({
   id
 });
 export const startRemoveExpense=({id}={})=>{
-  return (dispatch)=>{
-    return database.ref(`expenses/${id}`).remove()
+  return (dispatch,getState)=>{
+    const uid=getState().auth.uid;
+    return database.ref(`users/${uid}/expenses/${id}`).remove()
       .then(()=>{
         return dispatch(removeExpense({id}));
       });
@@ -41,6 +43,15 @@ export const startRemoveExpense=({id}={})=>{
 
 
 // EDIT_EXPENSE
+export const startEditExpense=(id,updates)=>{
+  return (dispatch,getState)=>{
+    const uid=getState().auth.uid;
+    return database.ref(`users/${uid}/expenses/${id}`).set(updates)
+      .then(()=>{
+        return dispatch(editExpense(id,updates));
+      });
+  }
+}
 export const editExpense = (id, updates) => ({
   type: 'EDIT_EXPENSE',
   id,
@@ -48,6 +59,7 @@ export const editExpense = (id, updates) => ({
 });
 
 
+// LOAD EXPENSES FROM FIREBASE
 export const setExpenses=(expenses)=>{
   return {
     type:'SET_EXPENSES',
@@ -56,8 +68,9 @@ export const setExpenses=(expenses)=>{
 }
 
 export const startSetExpenses=()=>{
-  return (dispatch)=>{
-    return database.ref('expenses').once('value')
+  return (dispatch,getState)=>{
+    const uid=getState().auth.uid;
+    return database.ref(`users/${uid}/expenses`).once('value')
       .then(snap=>{
         const expenses=[];
         snap.forEach(childSnap=>{
