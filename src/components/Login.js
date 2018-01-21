@@ -4,7 +4,7 @@ import {startLogin} from '../actions/auth';
 
 export class Login extends React.Component {
     constructor(props) {
-        super(props)
+        super(props);
         
         this.state={
             login:'',
@@ -26,16 +26,16 @@ export class Login extends React.Component {
 
         this.setState(()=>({
             [name]:value
-        }));
+        }))))));
     }
 
     render() {
         return (
-            <div className="box-layout">
+            <div className="box-layout" >
                 <div className="box-layout__box">
-                    <h2 className="box-layout__title">Expensify App</h2>
+                    <h2 className="box-layout__title">Expensify</h2>
                     <p>It's time to get your expenses under control</p>
-                    <button type="button" onClick={this.props.startLogin}>Login</button>
+                    <button type="button" className="button" onClick={this.props.startLogin}>Login with Google</button>
                 </div>
             </div>
         )
