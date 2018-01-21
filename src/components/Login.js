@@ -31,22 +31,12 @@ export class Login extends React.Component {
 
     render() {
         return (
-            <div>
-                <h2>Login here!</h2>
-                {
-                 (<button type="button" onClick={this.props.startLogin}>Log In</button>)
-                    ||
-                (<form onSubmit={this.onSubmit}>
-                    <div>
-                        <label>Login</label>
-                        <input type="text" name="login"  />
-                    </div>
-                    <div>
-                        <label>Password</label>
-                        <input type="text" name="pass"  />
-                    </div>
-                </form>)
-                }
+            <div className="box-layout">
+                <div className="box-layout__box">
+                    <h2 className="box-layout__title">Expensify App</h2>
+                    <p>It's time to get your expenses under control</p>
+                    <button type="button" onClick={this.props.startLogin}>Login</button>
+                </div>
             </div>
         )
     }
