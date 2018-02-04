@@ -1,16 +1,15 @@
 .box-layout {
     align-items:center;
     background:url('/images/bg.jpg');
-    background-size:cover;
-    height:100vh;
+    background-size: cover;
     display:flex;
-    justify-content: center;
-
+    height:100vh;
+    justify-content:center;
     width:100vw;
 }
 
 .box-layout__box {
-    background:fade-out(white,.15);
+    background:fade-out(#fff,.15);
     border-radius:3px;
     padding:$l-size $m-size;
     text-align:center;
@@ -18,6 +17,7 @@
 }
 
 .box-layout__title {
+    color:$dark-grey;
     margin:0 0 $m-size 0;
     line-height:1;
 }
